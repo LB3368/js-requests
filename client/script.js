@@ -10,7 +10,7 @@
 */
 
 // CODE HERE
-
+const sayHelloButton = document.querySelector('#say-hello-button')
 
 // PROBLEM 2
 /*
@@ -20,7 +20,6 @@
 */
 
 // CODE HERE
-
 
 // PROBLEM 3
 /*
