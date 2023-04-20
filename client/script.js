@@ -2,6 +2,8 @@
 //THE TEST SERVER IS RUNNING ON LOCALHOST:3000//
 ////////////////////////////////////////////////
 
+const { default: axios } = require("axios");
+
 // PROBLEM 1
 /*
     In the index.html file in this folder there is a button with an id of 'say-hello-button'!
@@ -10,7 +12,7 @@
 */
 
 // CODE HERE
-const sayHelloButton = document.querySelector('#say-hello-button')
+const sayHelloButton = document.querySelector("#say-hello-button");
 
 // PROBLEM 2
 /*
@@ -20,7 +22,13 @@ const sayHelloButton = document.querySelector('#say-hello-button')
 */
 
 // CODE HERE
+function changeButtonStyle() {
+  const sayHelloButton = document.getElementById("sayHelloButton");
+  sayHelloButton.style.backgroundColor = "black";
+  sayHelloButton.style.color = "white";
+}
 
+sayHelloButton.addEventListener("mouseover", changeButtonStyle);
 // PROBLEM 3
 /*
     Now you can see that the button colors change, but they do not change back when we take the mouse off of the button.
@@ -31,7 +39,17 @@ const sayHelloButton = document.querySelector('#say-hello-button')
 */
 
 // CODE HERE
-
+const button = document.querySelector("button");
+function changeButtonColor() {
+  button.style.backgroundColor = "blue";
+  button.style.color = "white";
+}
+function resetButtonColor() {
+  button.style.backgroundColor = "#EFEFEF";
+  button.style.color = "black";
+}
+button.addEventListener("mouseover", changeButtonColor);
+button.addEventListener("mouseout", resetButtonColor);
 
 // PROBLEM 4
 /*
@@ -42,19 +60,20 @@ const sayHelloButton = document.querySelector('#say-hello-button')
 
 // DO NOT EDIT FUNCTION
 const sayHello = () => {
-    axios.get('http://localhost:3000/say-hello').then((res) => {
-        let helloText = document.getElementById('hello-text');
-        helloText.style.display = 'block';
-        helloText.style.backgroundColor = 'green';
-        helloText.textContent = res.data;
-    })
-}
+  axios.get("http://localhost:3000/say-hello").then((res) => {
+    let helloText = document.getElementById("hello-text");
+    helloText.style.display = "block";
+    helloText.style.backgroundColor = "green";
+    helloText.textContent = res.data;
+  });
+};
 // DO NOT EDIT FUNCTION
 
 // CODE HERE
 
+sayHelloButton.addEventListener("click", sayHello);
 
-// PROBLEM 5 
+// PROBLEM 5
 /*
     Now that we have attached a few event listeners why don't we try adding a request? 
     
@@ -63,16 +82,18 @@ const sayHello = () => {
     Use axios inside the ohMy function to make a GET request to 'http://localhost:3000/animals' 
     
     Handle the promise that's returned with a .then, which you should pass a callback function to. Inside the callback function, console.log the response's data (in the intermediate instructions we'll come back to this function and add HTML).
-*/ 
+*/
 
 const ohMy = () => {
-    // YOUR CODE HERE
-}
+  // YOUR CODE HERE
+  axios.get("http://localhost:3000/animals").then((response) => {
+    console.log(response.data);
+  });
+};
 
-document.getElementById('animals-button').addEventListener('click', ohMy)
+document.getElementById("animals-button").addEventListener("click", ohMy);
 
-
-// PROBLEM 6 
+// PROBLEM 6
 /*
     Now lets see if you can send a request param! inside repeatMyParam function below  make get request to 'http://localhost:3000/repeat/{SOMEPARAM}', but with a string instead of {SOMEPARAM}.  
 
@@ -86,8 +107,20 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
 */
 
 const repeatMyParam = () => {
-    //YOUR CODE HERE
-}
+  //YOUR CODE HERE
+  const param = "hello";
+  axios
+    .get(`http://localhost:300/repeat/${param}`)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+// Add a click event listener to the button with id "repeat-button"
+button.addEventListener("click", repeatMyParam);
 
 // PROBLEM 7
 /*
@@ -100,7 +133,17 @@ const repeatMyParam = () => {
 
 // Code in the repeatMyParam function above
 
-
+function repeatMyParam() {
+  const params = new URLSearchParams(window.location.search);
+  const text = params.get("text");
+  fetch(`/api/repeat?text=${text}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const repeatText = document.getElementById("repeat-text");
+      repeatText.textContent = data.text;
+      repeatText.style.display = "block";
+    });
+}
 
 // PROBLEM 8
 /*
@@ -112,8 +155,15 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE
-
-
+function makeGetRequest() {
+  const query = "example-query"
+  fetch(`http://localhost:3000/query-test?query=${query}`)
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error))
+}
+const queryButton = document.getElementById("query-button")
+queryButton.addEventListener("click", makeGetRequest)
 
 ////////////////
 //INTERMEDIATE//
@@ -128,7 +178,19 @@ const repeatMyParam = () => {
 
 // Code in the ohMy function in Problem 5
 
-// PROBLEM 10 
+const newOhMy = () => {
+  axios.get("http://localhost:3000/animals").then((res) => {
+    for (let i = 0; i < res.data.length; i++) {
+      const p = document.createElement("p")
+      p.textContent = res.data[i]
+      document.body.appendChild(p)
+    }
+  })
+}
+
+document.getElementById("animals-button").addEventListener("click", ohMy)
+
+// PROBLEM 10
 /*
     In the function that you wrote for Problem 8, change the URL to test a couple different scenarios. 
 
@@ -139,7 +201,19 @@ const repeatMyParam = () => {
 
 // Edit code in Problem 8
 
-
+function makeGetRequest() {
+    fetch('http://localhost:3000/query-test')
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error))
+  }
+  
+  function makeGetRequest() {
+    fetch('http://localhost:3000/query-test?query1=value1&query2=value2')
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error(error))
+  }
 
 ////////////
 //ADVANCED//
@@ -164,4 +238,29 @@ const repeatMyParam = () => {
     Based on what we did earlier to display this type of data, write code that will display the response in your HTML document. 
 */
 
-// CODE HERE 
+// CODE HERE
+const foodForm = document.getElementById('food-form');
+const foodInput = document.getElementById('food-input');
+const foodList = document.getElementById('food-list');
+
+function createFood(event) {
+  event.preventDefault(); // prevent the form from submitting normally
+
+  const body = {
+    newFood: foodInput.value
+  };
+
+  axios.post('/food', body)
+    .then(response => {
+      console.log(response.data)
+      // create a new list item and add it to the food list
+      const listItem = document.createElement('li')
+      listItem.textContent = response.data.newFood
+      foodList.appendChild(listItem)
+      // clear the input field
+      foodInput.value = ''
+    })
+    .catch(error => console.error(error))
+}
+
+foodForm.addEventListener('submit', createFood)
