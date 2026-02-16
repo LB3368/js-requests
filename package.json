@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "axios": "^0.21.4",
+    "axios": "^1.13.5",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.22.0",
     "snyk": "^1.1143.0"
   }
 }
